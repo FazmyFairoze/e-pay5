@@ -1,8 +1,10 @@
+import 'package:e_pay/main.dart';
+import 'package:e_pay/screens/sign_up/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:e_pay/constants.dart';
 import 'package:e_pay/screens/sign_in/sign_in_screen.dart';
 import 'package:e_pay/size_config.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 // This is the best practice
 import '../components/splash_content.dart';
 import '../../../components/default_button.dart';
@@ -66,7 +68,22 @@ class _BodyState extends State<Body> {
                     DefaultButton(
                       text: "Continue",
                       press: () {
-                        Navigator.pushNamed(context, SignInScreen.routeName);
+                        FirebaseAuth.instance
+                            .authStateChanges()
+                            .listen((User user) {
+                          if (user == null) {
+                            print('User is currently signed out!');
+                            Navigator.pushNamed(
+                                context, SignInScreen.routeName);
+                            //state = false;
+                          } else {
+                            print('User is signed in!');
+                            //state = true;
+                            //REPLACE WITH BIOMETRIC AUTHENTICATION
+                            Navigator.pushNamed(
+                                context, SignInScreen.routeName);
+                          }
+                        });
                       },
                     ),
                     Spacer(),

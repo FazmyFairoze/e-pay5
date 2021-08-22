@@ -1,3 +1,6 @@
+import 'package:e_pay/models/User.dart';
+import 'package:e_pay/screens/complete_profile/components/complete_profile_form.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_pay/components/custom_surfix_icon.dart';
 import 'package:e_pay/components/form_error.dart';
@@ -72,12 +75,52 @@ class _SignFormState extends State<SignForm> {
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
             text: "Continue",
-            press: () {
+            press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+                //RecaptchaVerifier(
+                //onSuccess: () => print('reCAPTCHA Completed!'),
+                //onError: (FirebaseAuthException error) => print(error),
+                //onExpired: () => print('reCAPTCHA Expired!'),
+                //);
+
                 // if all are valid then go to success screen
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                          email: email, password: password);
+                  Navigator.pushNamed(context, HomeScreen.routeName);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    print('No user found for that email.');
+                  } else if (e.code == 'wrong-password') {
+                    print('Wrong password provided for that user.');
+                  }
+                }
+
+                //  .instance
+                //.signInWithPhoneNumber(phone); //,
+                //                ConfirmationResult confirmationResult =
+                //                     await FirebaseAuth.instance.signInWithPhoneNumber(
+                //                       phone,
+                //                     RecaptchaVerifier(
+                //                     container: 'recaptcha',
+                //                   size: RecaptchaVerifierSize.compact,
+                //                 theme: RecaptchaVerifierTheme.dark,
+                //             )); //(ConfirmationResult));
+//
+                //                UserCredential userCredential =
+                //                  await confirmationResult.confirm('12345678');
+                //password: "SuperSecretPassword!");
+                //          } on FirebaseAuthException catch (e) {
+                //          if (e.code == 'user-not-found') {
+                //          print('No user found for that email.');
+                //      } else if (e.code == 'wrong-password') {
+                //      print('Wrong password provided for that user.');
+                //  }
+
                 KeyboardUtil.hideKeyboard(context);
-                Navigator.pushNamed(context, HomeScreen.routeName);
+                //Navigator.pushNamed(context, HomeScreen.routeName);
               }
             },
           ),
@@ -89,6 +132,7 @@ class _SignFormState extends State<SignForm> {
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
+      keyboardType: TextInputType.number,
       onSaved: (newValue) => password = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
@@ -126,24 +170,24 @@ class _SignFormState extends State<SignForm> {
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          removeError(error: kInvalidEmailError);
-        }
+        } //else if (emailValidatorRegExp.hasMatch(value)) {
+        //removeError(error: kInvalidEmailError);
+        //}
         return null;
       },
       validator: (value) {
         if (value.isEmpty) {
           addError(error: kEmailNullError);
           return "";
-        } else if (!emailValidatorRegExp.hasMatch(value)) {
-          addError(error: kInvalidEmailError);
-          return "";
-        }
+        } // else if (!emailValidatorRegExp.hasMatch(value)) {
+        //addError(error: kInvalidEmailError);
+        //return "";
+        //}
         return null;
       },
       decoration: InputDecoration(
         labelText: "Email",
-        hintText: "Enter your email",
+        hintText: "Enter your email address",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -151,4 +195,19 @@ class _SignFormState extends State<SignForm> {
       ),
     );
   }
+
+//void signInWithPhoneNumber() async {
+  //try {
+  //final AuthCredential credential = PhoneAuthProvider.credential(
+  //verificationId: _verificationId,
+  //smsCode: _smsController.text,
+  //);
+
+  //final User user = (await _auth.signInWithCredential(credential)).user;
+
+  //showSnackbar("Successfully signed in UID: ${user.uid}");
+  //} catch (e) {
+  //showSnackbar("Failed to sign in: " + e.toString());
+  //}
+//}
 }

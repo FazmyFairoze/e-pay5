@@ -1,5 +1,6 @@
 import 'package:e_pay/screens/help/email_sender.dart';
 import 'package:e_pay/screens/help/help.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_pay/screens/account_details/account_details_screen.dart';
 
@@ -44,7 +45,9 @@ class Body extends StatelessWidget {
           ProfileMenu(
             text: "Log Out",
             icon: "assets/icons/Log out.svg",
-            press: () {
+            press: () async {
+              await FirebaseAuth.instance.signOut();
+              print("user has been logged out");
               Navigator.pushNamed(context, SignInScreen.routeName);
             },
           ),

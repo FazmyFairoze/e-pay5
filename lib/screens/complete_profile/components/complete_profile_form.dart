@@ -21,6 +21,7 @@ class CompleteProfileForm extends StatefulWidget {
   static final addressContoller = TextEditingController();
   static final nicController = TextEditingController();
   _CompleteProfileFormState createState() => _CompleteProfileFormState();
+  static String userId;
 }
 
 class _CompleteProfileFormState extends State<CompleteProfileForm> {
@@ -223,20 +224,21 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                               PhoneAuthProvider.credential(
                                   verificationId: verificationId,
                                   smsCode: _codeController.text.trim());
-                          UserCredential result =
-                              await _auth.signInWithCredential(credential);
-                          User user = result.user;
-                          if (user != null) {
-                            Users.addData();
-                            //AddUser(
-                            //  CompleteProfileForm.nameContoller.text,
-                            //CompleteProfileForm.addressContoller.text,
-                            //CompleteProfileForm.nicController.text,
-                            //CompleteProfileForm.phoneNumberController.text);
-                            Navigator.pushNamed(context, HomeScreen.routeName);
-                          } else {
-                            print("error");
-                          }
+                          //UserCredential result =
+                          //  await _auth.signInWithCredential(credential);
+                          //User user = result.user;
+                          //if (user != null) {
+                          //CompleteProfileForm.userId = user.uid;
+                          Users.addData();
+                          //AddUser(
+                          //  CompleteProfileForm.nameContoller.text,
+                          //CompleteProfileForm.addressContoller.text,
+                          //CompleteProfileForm.nicController.text,
+                          //CompleteProfileForm.phoneNumberController.text);
+                          Navigator.pushNamed(context, HomeScreen.routeName);
+                          //} else {
+                          //print("error");
+                          //}
                         })
                   ],
                 );

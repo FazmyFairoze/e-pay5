@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_pay/components/custom_surfix_icon.dart';
 import 'package:e_pay/components/default_button.dart';
@@ -9,6 +10,7 @@ import '../../../size_config.dart';
 
 class SignUpForm extends StatefulWidget {
   @override
+  static final passwordController = TextEditingController();
   static final emailController = TextEditingController();
   _SignUpFormState createState() => _SignUpFormState();
 }
@@ -51,11 +53,24 @@ class _SignUpFormState extends State<SignUpForm> {
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
-            press: () {
+            press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance
+                      .createUserWithEmailAndPassword(
+                          email: SignUpForm.emailController.text.trim(),
+                          password: SignUpForm.passwordController.text.trim());
+                  Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'email-already-in-use') {
+                    print('The account already exists for that email.');
+                  }
+                } catch (e) {
+                  print(e);
+                }
                 // if all are valid then go to success screen
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+
               }
             },
           ),
@@ -66,6 +81,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   TextFormField buildConformPassFormField() {
     return TextFormField(
+      keyboardType: TextInputType.number,
       obscureText: true,
       onSaved: (newValue) => conform_password = newValue,
       onChanged: (value) {
@@ -99,6 +115,8 @@ class _SignUpFormState extends State<SignUpForm> {
 
   TextFormField buildPasswordFormField() {
     return TextFormField(
+      controller: SignUpForm.passwordController,
+      keyboardType: TextInputType.number,
       obscureText: true,
       onSaved: (newValue) => password = newValue,
       onChanged: (value) {
