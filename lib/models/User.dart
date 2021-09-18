@@ -67,4 +67,28 @@ class Users {
       print(a.id);
     }
   }
+
+  static Future<List> read() async {
+    QuerySnapshot querySnapshot;
+    List docs = [];
+    try {
+      querySnapshot = await FirebaseFirestore.instance.collection("user").get();
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var doc in querySnapshot.docs.toList()) {
+          Map data = {
+            "userId": doc.id,
+            "fullName": doc["fullName"],
+            "email": doc["email"],
+            "address": ["address"],
+            "phoneNumber": doc["phoneNumber"],
+            "nic": doc["nic"]
+          };
+          docs.add(data);
+        }
+        return docs;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }

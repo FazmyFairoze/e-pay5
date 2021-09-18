@@ -51,29 +51,70 @@ class _SignUpFormState extends State<SignUpForm> {
           buildConformPassFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
-          DefaultButton(
-            text: "Continue",
-            press: () async {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                try {
-                  UserCredential userCredential = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                          email: SignUpForm.emailController.text.trim(),
-                          password: SignUpForm.passwordController.text.trim());
-                  Navigator.pushNamed(context, CompleteProfileScreen.routeName);
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'email-already-in-use') {
-                    print('The account already exists for that email.');
-                  }
-                } catch (e) {
-                  print(e);
-                }
-                // if all are valid then go to success screen
+          Container(
+              //alignment: Alignment.bottomCenter,
+              height: getProportionateScreenHeight(56),
+              width: double.infinity,
+              //alignment: Alignment.topLeft,
+              child: SizedBox(
 
-              }
-            },
-          ),
+                  //fit: BoxFit.fill,
+                  child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Stack(
+                  children: <Widget>[
+                    Positioned.fill(
+                      //textDirection: null,
+                      child: Container(
+                        //height: getProportionateScreenHeight(56),
+                        //width: double.infinity,
+                        decoration: const BoxDecoration(
+                          //gradient: LinearGradient(
+                          color: Colors.teal,
+                          //Colors.teal,
+                          //Color(0xFF0D47A1),
+                          //Colors.deepOrangeAccent,
+                          //!!!!!Color(0xFFFF8A65),
+                          //],
+                        ),
+                      ),
+                    ),
+                    // ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          //alignment: ,
+                          padding: const EdgeInsets.all(16.0),
+                          primary: Colors.white,
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            try {
+                              UserCredential userCredential = await FirebaseAuth
+                                  .instance
+                                  .createUserWithEmailAndPassword(
+                                      email: SignUpForm.emailController.text
+                                          .trim(),
+                                      password: SignUpForm
+                                          .passwordController.text
+                                          .trim());
+                              Navigator.pushNamed(
+                                  context, CompleteProfileScreen.routeName);
+                            } on FirebaseAuthException catch (e) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child:
+                            const Text('Continue', textAlign: TextAlign.center),
+                      ),
+                    )
+                  ],
+                ),
+              )))
         ],
       ),
     );

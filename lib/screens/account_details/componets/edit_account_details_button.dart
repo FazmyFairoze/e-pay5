@@ -6,10 +6,11 @@ import '../../../components/default_button.dart';
 
 class EditAccountDetailsButton extends StatelessWidget {
   Widget build(BuildContext context) {
-    return DefaultButton(
-        press: () {
+    return TextButton(
+        onPressed: () {
           Navigator.pushNamed(context, CompleteProfileScreen.routeName);
         },
-        text: "Edit Profile");
+        child: const Text('Edit Profile'));
+    //text: "Edit Profile");
   }
 }

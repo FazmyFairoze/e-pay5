@@ -14,8 +14,8 @@ class Qr extends StatefulWidget {
 
 class _QrState extends State<Qr> {
   String barcodeScanRes;
-  String result = "Please Scan Qr at merchant checkout";
-  String _scanBarcode = 'Unknown';
+  String result = "unkonown";
+  String _scanBarcode = 'Please scan Qr code at merchant checkout';
   scanQr() async {
     try {
       result = await FlutterBarcodeScanner.scanBarcode(
